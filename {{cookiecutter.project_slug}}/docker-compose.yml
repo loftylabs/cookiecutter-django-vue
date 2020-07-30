@@ -1,8 +1,5 @@
 version: '3.3'
 
-volumes:
-    postgres_data: {}
-
 services:
   backend:
     build:
@@ -30,3 +27,6 @@ services:
     logging:
       driver: none
 {% endif %}
+
+volumes:
+  postgres_data: {}
