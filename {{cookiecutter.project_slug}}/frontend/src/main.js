@@ -11,7 +11,6 @@ import { createProvider } from '@/apollo'
 {% endif %}
 
 {% if cookiecutter.analytics == 'Google Analytics' %}import VueAnalytics from 'vue-analytics'{% endif %}
-{% if cookiecutter.analytics == 'Yandex Metrika' %}import VueYandexMetrika from 'vue-yandex-metrika'{% endif %}
 {% if cookiecutter.use_sentry == 'y' %}import VueRaven from 'vue-raven'{% endif %}
 
 import App from '@/App.vue'
@@ -34,14 +33,6 @@ Vue.use(VueAnalytics, {
 })
 {% endif %}
 
-{% if cookiecutter.analytics == 'Yandex Metrika' %}
-// more info: https://github.com/vchaptsev/vue-yandex-metrika
-Vue.use(VueYandexMetrika, {
-  id: process.env.VUE_APP_YANDEX_METRIKA,
-  env: process.env.NODE_ENV,
-  router
-})
-{% endif %}
 
 new Vue({
   router,
