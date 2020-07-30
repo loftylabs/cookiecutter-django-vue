@@ -19,23 +19,6 @@ services:
       - postgres_data:/var/lib/postgresql/data
     env_file: .env
 
-{% if cookiecutter.use_mailhog == 'y' %}
-  mailhog:
-    image: mailhog/mailhog
-    ports:
-      - "8025:8025"
-    logging:
-      driver: none
-{% endif %}
-
-{% if cookiecutter.use_redis == 'y' %}
-  redis:
-    image: redis
-    hostname: redis
-    ports:
-      - 6379:6379
-{% endif %}
-
 
 volumes:
   postgres_data: {}

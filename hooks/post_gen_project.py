@@ -52,7 +52,18 @@ def delete_api_files():
     for filename in files:
         os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
+def delete_worker_docker_compose():
+    """ Deletes unused API files """
+    if '{{ cookiecutter.use_redis }}' != 'y' and '{{ cookiecutter.use_mailhog }}' != 'y':
+        files = [
+            'dc-worker.yml'
+        ]
+    
+        for filename in files:
+            os.remove(os.path.join(PROJECT_DIRECTORY, filename))
+
 
 set_secret_key()
 rename_env_file()
 delete_api_files()
+delete_worker_docker_compose()
