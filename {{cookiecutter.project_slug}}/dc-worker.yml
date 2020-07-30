@@ -1,7 +1,6 @@
 version: '3.3'
 
 services:
-
 {% if cookiecutter.use_mailhog == 'y' %}
   mailhog:
     image: mailhog/mailhog
@@ -64,6 +63,15 @@ services:
       - data03:/usr/share/elasticsearch/data
 
 {% endif %}
+
+{% if cookiecutter.use_redis == 'y' %}
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - 6379:6379
+{% endif %}
+
 volumes:
   {% if  cookiecutter.use_elastic_search == 'y' %}
   data01:
@@ -73,3 +81,5 @@ volumes:
   data03:
     driver: local
   {% endif %}
+
+

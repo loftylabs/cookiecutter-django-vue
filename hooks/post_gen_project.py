@@ -52,29 +52,19 @@ def delete_api_files():
     for filename in files:
         os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
-
-def delete_api_files():
+def delete_worker_docker_compose():
     """ Deletes unused API files """
-    if '{{ cookiecutter.use_redis }}' != 'y' and '{{ cookiecutter.use_redis }}' != 'y':
+    if '{{ cookiecutter.use_redis }}' != 'y' and '{{ cookiecutter.use_mailhog }}' != 'y' and '{{ cookiecutter.use_elastic_search }}' != 'y':
         files = [
-            '.graphqlrc',
-            'backend/config/schema.py',
-            'backend/apps/users/schema.py',
-            'frontend/src/apollo.js',
+            'dc-worker.yml'
         ]
-        shutil.rmtree(os.path.join(PROJECT_DIRECTORY, 'frontend/src/graphql'))
-    else:
-        files = [
-            'backend/config/api.py',
-            'backend/apps/users/views.py',
-            'backend/apps/users/serializers.py',
-        ]
-        shutil.rmtree(os.path.join(PROJECT_DIRECTORY, 'frontend/src/store'))
     
-    for filename in files:
-        os.remove(os.path.join(PROJECT_DIRECTORY, filename))
+        for filename in files:
+            os.remove(os.path.join(PROJECT_DIRECTORY, filename))
+
 
 
 set_secret_key()
 rename_env_file()
 delete_api_files()
+delete_worker_docker_compose()
