@@ -26,19 +26,6 @@ services:
       - postgres_data:/var/lib/postgresql/data
     env_file: .env
 
-  nginx:
-    build:
-      context: .
-      dockerfile: nginx/Dockerfile
-    ports:
-      - "8000:80"
-    depends_on:
-      - backend
-    volumes:
-      - ./backend/media/:/media/
-      - ./backend/staticfiles/:/staticfiles/
-      - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
-
 
 {% if cookiecutter.backups == 'y' %}
   backups:

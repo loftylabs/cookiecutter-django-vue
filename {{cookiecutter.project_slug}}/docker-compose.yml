@@ -30,16 +30,3 @@ services:
     logging:
       driver: none
 {% endif %}
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "8000:80"
-    depends_on:
-      - backend
-    volumes:
-      - ./backend/media/:/media/
-      - ./backend/staticfiles/:/staticfiles/
-      - ./nginx/dev.conf:/etc/nginx/nginx.conf:ro
-    logging:
-      driver: none
