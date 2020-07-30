@@ -16,5 +16,5 @@
     "use_sentry": "y",
     "use_portainer": "y",
     "use_mailhog": "y",
-    "analytics": ["Google Analytics", "Yandex Metrika", "None"]
+    "analytics": ["Google Analytics", "None"]
 }
