@@ -14,4 +14,18 @@ const router = new VueRouter({
   routes
 })
 
+
+const authExcludedRoutes = [
+  // Include Routes that SHOULD NOT check for authorization here
+]
+
+router.beforeEach((to, from, next) => {
+  if (store.state.auth.loggedIn === false && !authExcludedRoutes.includes(to.name)) {
+      next('/login')
+  } else {
+      next()
+  }
+})
+
+
 export default router
