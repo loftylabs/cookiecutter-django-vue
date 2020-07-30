@@ -29,6 +29,7 @@
     "babel-core": "^6.26.3",
     "babel-jest": "^23.4.2",
     "node-sass": "^4.9.3",
+    "bootstrap": "^4.3.1",
     {% if cookiecutter.api == "GraphQL" %}
     "graphql-tag": "^2.9.2",
     "vue-cli-plugin-apollo": "^0.16.4",
