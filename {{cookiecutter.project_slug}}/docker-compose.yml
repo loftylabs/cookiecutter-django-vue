@@ -1,8 +1,5 @@
 version: '3.3'
 
-volumes:
-    postgres_data: {}
-
 services:
   backend:
     build:
@@ -15,16 +12,7 @@ services:
     entrypoint: /entrypoint.sh
     restart: on-failure
     env_file: .env
-
-  frontend:
-    image: node:10-alpine
-    command: npm run serve
-    volumes:
-      - ./.env:/app/.env:ro
-      - ./frontend:/app
-    working_dir: /app
-    restart: on-failure
-
+  
   postgres:
     image: postgres:10-alpine
     volumes:
@@ -39,3 +27,6 @@ services:
     logging:
       driver: none
 {% endif %}
+
+volumes:
+  postgres_data: {}
