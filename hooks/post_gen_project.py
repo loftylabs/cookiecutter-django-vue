@@ -53,6 +53,28 @@ def delete_api_files():
         os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
 
+def delete_api_files():
+    """ Deletes unused API files """
+    if '{{ cookiecutter.use_redis }}' != 'y' and '{{ cookiecutter.use_redis }}' != 'y':
+        files = [
+            '.graphqlrc',
+            'backend/config/schema.py',
+            'backend/apps/users/schema.py',
+            'frontend/src/apollo.js',
+        ]
+        shutil.rmtree(os.path.join(PROJECT_DIRECTORY, 'frontend/src/graphql'))
+    else:
+        files = [
+            'backend/config/api.py',
+            'backend/apps/users/views.py',
+            'backend/apps/users/serializers.py',
+        ]
+        shutil.rmtree(os.path.join(PROJECT_DIRECTORY, 'frontend/src/store'))
+    
+    for filename in files:
+        os.remove(os.path.join(PROJECT_DIRECTORY, filename))
+
+
 set_secret_key()
 rename_env_file()
 delete_api_files()
