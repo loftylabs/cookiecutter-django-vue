@@ -28,5 +28,14 @@ services:
       driver: none
 {% endif %}
 
+{% if cookiecutter.use_redis == 'y' %}
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - 6379:6379
+{% endif %}
+
+
 volumes:
   postgres_data: {}
