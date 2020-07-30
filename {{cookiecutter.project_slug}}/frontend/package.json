@@ -29,6 +29,14 @@
     "babel-core": "^6.26.3",
     "babel-jest": "^23.4.2",
     "node-sass": "^4.9.3",
+    "moment": "^2.24.0",
+    "lodash": "^4.17.15",
+    "vuejs-datepicker": "^1.6.2",
+    "vue-toasted": "^1.1.27",
+    "vue-select": "^3.2.0",
+    "vue-sweetalert2": "^3.0.3",
+    "vuex-persistedstate": "^2.7.0",
+
     {% if cookiecutter.api == "GraphQL" %}
     "graphql-tag": "^2.9.2",
     "vue-cli-plugin-apollo": "^0.16.4",
