@@ -15,16 +15,7 @@ services:
     entrypoint: /entrypoint.sh
     restart: on-failure
     env_file: .env
-
-  frontend:
-    image: node:10-alpine
-    command: npm run serve
-    volumes:
-      - ./.env:/app/.env:ro
-      - ./frontend:/app
-    working_dir: /app
-    restart: on-failure
-
+  
   postgres:
     image: postgres:10-alpine
     volumes:
