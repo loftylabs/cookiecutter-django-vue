@@ -63,8 +63,17 @@ def delete_worker_docker_compose():
             os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
 
+def delete_circleci():
+    """ Deletes unused API files """
+    if '{{ cookiecutter.use_circleci }}' != 'y':
+    
+        for filename in files:
+            os.rmdir(os.path.join(PROJECT_DIRECTORY, '.circleci'))
+
+
 
 set_secret_key()
 rename_env_file()
 delete_api_files()
 delete_worker_docker_compose()
+delete_circleci()
