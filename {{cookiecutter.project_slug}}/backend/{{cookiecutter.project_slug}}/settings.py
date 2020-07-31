@@ -125,7 +125,7 @@ STATIC_URL = '/staticfiles/'
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = [
     str(ROOT_DIR('static')),
-    str(ROOT_DIR('config/templates')),
+    str(ROOT_DIR('{{cookiecutter.project_slug}}/templates')),
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
@@ -144,10 +144,10 @@ MEDIA_URL = '/media/'
 
 # URL Configuration
 # ------------------------------------------------------------------------------
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = '{{cookiecutter.project_slug}}.urls'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = '{{cookiecutter.project_slug}}.wsgi.application'
 
 # TEMPLATE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -230,7 +230,7 @@ REST_FRAMEWORK = {
 {% elif cookiecutter.api == 'GraphQL' %}
 # Graphene
 GRAPHENE = {
-    'SCHEMA': 'config.schema.schema',
+    'SCHEMA': '{{cookiecutter.project_slug}}.schema.schema',
 }
 
 if DEBUG:

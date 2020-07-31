@@ -36,14 +36,14 @@ def delete_api_files():
     if '{{ cookiecutter.api }}' == 'REST':
         files = [
             '.graphqlrc',
-            'backend/config/schema.py',
+            'backend/{{cookiecutter.project_slug}}/schema.py',
             'backend/apps/users/schema.py',
             'frontend/src/apollo.js',
         ]
         shutil.rmtree(os.path.join(PROJECT_DIRECTORY, 'frontend/src/graphql'))
     else:
         files = [
-            'backend/config/api.py',
+            'backend/{{cookiecutter.project_slug}}/api.py',
             'backend/apps/users/views.py',
             'backend/apps/users/serializers.py',
         ]
@@ -66,7 +66,7 @@ def delete_celery():
     """ Deletes unused API files """
     if '{{ cookiecutter.use_celery }}' != 'y':
         files = [
-            'backend/config/celery.py'
+            'backend/{{cookiecutter.project_slug}}/celery.py'
         ]
     
         for filename in files:
