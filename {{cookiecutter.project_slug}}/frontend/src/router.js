@@ -2,9 +2,13 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import ExampleComponent from '@/components/ExampleComponent.vue'
+import Login from '@/views/Login.vue'
+import Register from '@/views/Register.vue'
 
 const routes = [
-  {path: '*', component: ExampleComponent}
+  {path: '*', component: ExampleComponent},
+  {path:'/login', name:'login', component: Login},
+  {path:'/register', name:'register', component: Register}
 ]
 
 Vue.use(VueRouter)
@@ -17,6 +21,8 @@ const router = new VueRouter({
 
 const authExcludedRoutes = [
   // Include Routes that SHOULD NOT check for authorization here
+  'login',
+  'register'
 ]
 
 router.beforeEach((to, from, next) => {
