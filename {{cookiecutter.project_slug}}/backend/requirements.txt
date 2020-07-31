@@ -54,7 +54,7 @@ graphene-django==2.1.0
 redis==3.5.2
 django-redis==4.12.1
 {% endif %}
-{% if cookiecutter.user_celery %}
+{% if cookiecutter.use_celery %}
 celery==4.4.2
 {% endif %}
 
