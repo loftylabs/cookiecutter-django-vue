@@ -305,3 +305,22 @@ RAVEN_CONFIG = {
     'DSN': SENTRY_DSN
 }
 {% endif %}
+
+{% if cookiecutter.use_redis == 'y' %}
+
+REDIS_HOST = os.environ.get('REDIS_HOST', 'redis')
+REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD')
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+
+
+{% endif %}
