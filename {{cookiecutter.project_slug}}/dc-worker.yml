@@ -89,7 +89,7 @@ services:
     depends_on:
         - rabbitmq
         - redis
-    command: celery -A {{cookiecutter.project_slug}} worker --loglevel=info
+    command: celery -A config worker --loglevel=info
     env_file: .env
 
 

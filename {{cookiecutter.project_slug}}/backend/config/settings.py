@@ -325,3 +325,23 @@ CACHES = {
 
 
 {% endif %}
+
+{% if cookiecutter.use_celery == 'y' %}
+
+RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST')
+RABBITMQ_USER = os.environ.get('RABBITMQ_USER')
+RABBITMQ_PASSWORD = os.environ.get('RABBITMQ_PASSWORD')
+
+
+CELERY_ACCEPT_CONTENT = ['json']  # Ignore other content
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ENABLE_UTC = True
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_BROKER_URL = f'amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_HOST}:5672//'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:6379/0'
+CELERY_TASK_ALWAYS_EAGER = os.environ.get('CELERY_TASK_ALWAYS_EAGER', 'False') == 'True'
+CELERY_BEAT_SCHEDULE = {
+   
+}
+
+{% endif %}
