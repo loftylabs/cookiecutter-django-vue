@@ -26,7 +26,8 @@ const mutations = {
 const actions = {
   getUsersList (context) {
     return axios.get('/api/users')
-      .then(response => { context.commit('setUsers', response.data) })
+      .then(response => { context.commit('setUsers', response.data);
+    })
       .catch(e => { console.log(e) })
   },
   getUser (context, userId) {
