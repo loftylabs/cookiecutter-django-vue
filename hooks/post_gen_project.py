@@ -54,7 +54,7 @@ def delete_api_files():
 
 def delete_worker_docker_compose():
     """ Deletes unused API files """
-    if '{{ cookiecutter.use_redis }}' != 'y' and '{{ cookiecutter.use_mailhog }}' != 'y' and '{{ cookiecutter.use_elastic_search }}' != 'y':
+    if '{{ cookiecutter.use_redis }}' != 'y' and '{{ cookiecutter.use_mailhog }}' != 'y' and '{{ cookiecutter.use_elastic_search }}' != 'y' and '{{ cookiecutter.use_celery }}' != 'y':
         files = [
             'dc-worker.yml'
         ]
@@ -62,9 +62,19 @@ def delete_worker_docker_compose():
         for filename in files:
             os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
+def delete_celery():
+    """ Deletes unused API files """
+    if '{{ cookiecutter.use_celery }}' != 'y':
+        files = [
+            'backend/config/celery.py'
+        ]
+    
+        for filename in files:
+            os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
 
 set_secret_key()
 rename_env_file()
 delete_api_files()
 delete_worker_docker_compose()
+delete_celery()
