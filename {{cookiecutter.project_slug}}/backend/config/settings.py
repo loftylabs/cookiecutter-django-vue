@@ -125,6 +125,7 @@ STATIC_URL = '/staticfiles/'
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = [
     str(ROOT_DIR('static')),
+    str(ROOT_DIR('config/templates')),
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
