@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import store from '@/store'
+import store from '@/store/index.js'
 import router from '@/router'
 
 {% if cookiecutter.api == "REST" %}
