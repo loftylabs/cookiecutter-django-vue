@@ -17,5 +17,6 @@
     "use_mailhog": "y",
     "analytics": ["Google Analytics", "None"],
     "use_elastic_search": "y",
-    "use_redis":"y"
+    "use_redis":"y",
+    "use_selenium":"y"
 }
