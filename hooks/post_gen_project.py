@@ -73,8 +73,19 @@ def delete_celery():
             os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
 
+def delete_intercom():
+    """ Deletes unused API files """
+    if '{{cookiecutter.analytics}}' != "Intercom":
+        files = [
+            'frontend/src/components/Intercom.vue'
+        ]
+    
+        for filename in files:
+            os.remove(os.path.join(PROJECT_DIRECTORY, filename))
+
 set_secret_key()
 rename_env_file()
 delete_api_files()
 delete_worker_docker_compose()
 delete_celery()
+delete_intercom()
