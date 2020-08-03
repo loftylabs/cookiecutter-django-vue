@@ -78,7 +78,7 @@ services:
       context:  ./backend
     volumes:
         - ./backend:/app
-    command: celery -A config beat
+    command: celery -A {{cookiecutter.project_slug}} beat
     env_file: .env
 
   worker:
@@ -89,7 +89,7 @@ services:
     depends_on:
         - rabbitmq
         - redis
-    command: celery -A config worker --loglevel=info
+    command: celery -A {{cookiecutter.project_slug}} worker --loglevel=info
     env_file: .env
 
 
