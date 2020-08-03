@@ -63,7 +63,7 @@ def delete_worker_docker_compose():
             os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
 def run_npm_install():
-    subprocess.check_call('npm install', shell=True)
+    subprocess.check_call('cd frontend & npm install', shell=True)
 
 
 
