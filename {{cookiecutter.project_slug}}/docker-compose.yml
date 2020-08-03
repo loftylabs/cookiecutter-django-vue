@@ -22,9 +22,9 @@ services:
       - RABBITMQ_PASSWORD=secret
       - CELERY_TASK_ALWAYS_EAGER=False
       {% endif %}
-      - AWS_ACCESS_KEY_ID=AKIAQANJB6P56XJUVF45
-      - AWS_SECRET_ACCESS_KEY=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
-      - AWS_STORAGE_BUCKET_NAME=crop-rx-local-web
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - AWS_STORAGE_BUCKET_NAME=
       - DEPLOYMENT_ENVIRONMENT=local
       - LOCAL_HOST=TRUE
       - AWS_HTTPS=NO
@@ -32,7 +32,7 @@ services:
       - WEB_HOST=backend
       - FRONTEND_URL=http://localhost:8080/
       - ELASTICSEARCH_CONN=http://es01:9200
-      - DB_AUTH_KEY=f1b4fd36382857784f87ec4cfea17f18572333cd
+      - DB_AUTH_KEY=
      
   
   postgres:

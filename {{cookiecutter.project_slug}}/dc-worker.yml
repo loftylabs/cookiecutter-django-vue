@@ -95,13 +95,13 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_HOST=db
-      - DB_AUTH_KEY=f1b4fd36382857784f87ec4cfea17f18572333cd
+      - DB_AUTH_KEY=
       - RABBITMQ_HOST=mq
       - RABBITMQ_USER=user
       - RABBITMQ_PASSWORD=secret
-      - AWS_ACCESS_KEY_ID=AKIAQANJB6P56XJUVF45
-      - AWS_SECRET_ACCESS_KEY=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
-      - AWS_STORAGE_BUCKET_NAME=crop-rx-local-web
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - AWS_STORAGE_BUCKET_NAME=
       - AWS_HTTPS=NO
       - AWS_VIRTUAL_HOSTING=FALSE
       - WEB_HOST=backend
