@@ -77,7 +77,7 @@ def delete_intercom():
     """ Deletes unused API files """
     if '{{cookiecutter.analytics}}' != "Intercom":
         files = [
-            'frontend/components/Intercom.vue'
+            'frontend/src/components/Intercom.vue'
         ]
     
         for filename in files:
