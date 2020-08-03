@@ -42,7 +42,10 @@ Werkzeug==0.14.1
 {% if cookiecutter.use_elastic_search %}
 elasticsearch==7.6.0
 {% endif %}
-{% if cookiecutter.use_sentry == 'y' %}raven==6.9.0{% endif %}
+{% if cookiecutter.use_sentry == 'y' %}
+raven==6.9.0
+sentry-sdk==0.11.2
+{% endif %}
 {% if cookiecutter.api == 'REST' %}
 django-cors-headers==3.0.2
 djangorestframework==3.8.2
@@ -55,10 +58,10 @@ graphene-django==2.1.0
 redis==3.5.2
 django-redis==4.12.1
 {% endif %}
-{% if cookiecutter.use_selenium %}
+{% if cookiecutter.use_selenium == 'y' %}
 selenium==3.141.0
 {% endif %}
-{% if cookiecutter.use_celery %}
+{% if cookiecutter.use_celery == 'y' %}
 flower==0.9.4
 celery==4.4.2
 {% endif %}
