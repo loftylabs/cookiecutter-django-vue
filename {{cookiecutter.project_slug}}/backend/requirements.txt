@@ -44,6 +44,7 @@ elasticsearch==7.6.0
 {% endif %}
 {% if cookiecutter.use_sentry == 'y' %}raven==6.9.0{% endif %}
 {% if cookiecutter.api == 'REST' %}
+django-cors-headers==3.0.2
 djangorestframework==3.8.2
 {% elif cookiecutter.api == 'GraphQL' %}
 django-graphql-jwt==0.1.10
@@ -54,7 +55,14 @@ graphene-django==2.1.0
 redis==3.5.2
 django-redis==4.12.1
 {% endif %}
-{% if cookiecutter.user_celery %}
+{% if cookiecutter.use_selenium %}
+selenium==3.141.0
+{% endif %}
+{% if cookiecutter.use_celery %}
+flower==0.9.4
 celery==4.4.2
 {% endif %}
-
+django-storages==1.7.1
+boto==2.49.0
+boto3==1.9.209
+botocore==1.12.209
