@@ -62,9 +62,15 @@ def delete_worker_docker_compose():
         for filename in files:
             os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
+def run_npm_install():
+    subprocess.check_call('npm install', shell=True)
+
+
+
 
 
 set_secret_key()
 rename_env_file()
 delete_api_files()
 delete_worker_docker_compose()
+run_npm_install()
