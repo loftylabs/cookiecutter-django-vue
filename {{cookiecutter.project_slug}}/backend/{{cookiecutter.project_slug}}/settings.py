@@ -129,7 +129,7 @@ STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/staticfiles/'
-DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'
+DEFAULT_FILE_STORAGE = '{{cookiecutter.project_slug}}.storage_backends.MediaStorage'
 
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
@@ -160,7 +160,7 @@ if LOCAL_HOST:
     
 
 else:
-    STATICFILES_STORAGE = 'config.storage_backends.StaticStorage'
+    STATICFILES_STORAGE = '{{cookiecutter.project_slug}}.storage_backends.StaticStorage'
     AWS_S3_USE_SSL = True
     AWS_S3_SIGNATURE_VERSION = 's3v4'
     {% if cookiecutter.use_sentry %}
