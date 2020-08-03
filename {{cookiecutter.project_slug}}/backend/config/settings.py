@@ -9,6 +9,14 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 import environ
 from datetime import timedelta
+import os
+
+{% if cookiecutter.use_sentry %}
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.celery import CeleryIntegration
+{% endif %}
+
 
 ROOT_DIR = environ.Path(__file__) - 2
 
@@ -133,6 +141,39 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
+
+
+AWS_S3_REGION_NAME = 'us-east-2'
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_QUERYSTRING_EXPIRE = 28800
+AWS_AUTO_CREATE_BUCKET = True
+LOCAL_HOST = bool(os.environ.get('LOCAL_HOST', False))
+
+
+if LOCAL_HOST:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    
+
+else:
+    STATICFILES_STORAGE = 'config.storage_backends.StaticStorage'
+    AWS_S3_USE_SSL = True
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
+    {% if cookiecutter.use_sentry %}
+    sentry_sdk.init(
+        dsn="https://2c8d4a2931d4433e9c62a702f462c55a@sentry.io/1813585",
+        integrations=[DjangoIntegration(), CeleryIntegration()]
+    )
+    {% endif %}
+
+    # Email Settings
+    EMAIL_BACKEND = 'django_ses.SESBackend'
+    AWS_SES_REGION_NAME = 'us-east-1'
+    AWS_SES_REGION_ENDPOINT = 'email.us-east-1.amazonaws.com'
+
+
 
 # MEDIA CONFIGURATION
 # ------------------------------------------------------------------------------
