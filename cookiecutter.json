@@ -15,7 +15,7 @@
     "==================== INTEGRATIONS ===================": " ",
     "use_sentry": "y",
     "use_mailhog": "y",
-    "analytics": ["Google Analytics", "None"],
+    "analytics": ["Google Analytics", "Intercom", "None"],
     "use_elastic_search": "y",
     "use_redis": "y",
     "use_celery": "y",
