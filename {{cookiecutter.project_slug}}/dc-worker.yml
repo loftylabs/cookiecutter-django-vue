@@ -78,7 +78,7 @@ services:
       context:  ./backend
     volumes:
         - ./backend:/app
-    command: celery -A config beat
+    command: celery -A {{cookiecutter.project_slug}} beat
     env_file: .env
 
   worker:
@@ -89,25 +89,26 @@ services:
     depends_on:
         - rabbitmq
         - redis
-    command: celery -A config worker --loglevel=info
+    command: celery -A {{cookiecutter.project_slug}} worker --loglevel=info
     environment:
       - DB_NAME=postgres
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_HOST=db
+      - DB_AUTH_KEY=f1b4fd36382857784f87ec4cfea17f18572333cd
       - RABBITMQ_HOST=mq
       - RABBITMQ_USER=user
       - RABBITMQ_PASSWORD=secret
       - AWS_ACCESS_KEY_ID=AKIAQANJB6P56XJUVF45
       - AWS_SECRET_ACCESS_KEY=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
       - AWS_STORAGE_BUCKET_NAME=crop-rx-local-web
-      - DEPLOYMENT_ENVIRONMENT=local
-      - LOCAL_HOST=TRUE
       - AWS_HTTPS=NO
       - AWS_VIRTUAL_HOSTING=FALSE
       - WEB_HOST=backend
+      - DEPLOYMENT_ENVIRONMENT=local
+      - LOCAL_HOST=TRUE
       - ELASTICSEARCH_CONN=http://es01:9200
-      - DB_AUTH_KEY=f1b4fd36382857784f87ec4cfea17f18572333cd
+
 
   mq:
     image: rabbitmq:latest
@@ -129,7 +130,7 @@ services:
 
 {% endif %}
 
-{% if cookiecutter.use_selenium %}
+{% if cookiecutter.use_selenium == 'y' %}
 selenium:
   image: selenium/standalone-chrome-debug:3.7.1
   ports:

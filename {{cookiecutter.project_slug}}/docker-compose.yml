@@ -16,9 +16,12 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_HOST=db
+      {% if cookiecutter.use_celery %}
       - RABBITMQ_HOST=mq
       - RABBITMQ_USER=user
       - RABBITMQ_PASSWORD=secret
+      - CELERY_TASK_ALWAYS_EAGER=False
+      {% endif %}
       - AWS_ACCESS_KEY_ID=AKIAQANJB6P56XJUVF45
       - AWS_SECRET_ACCESS_KEY=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
       - AWS_STORAGE_BUCKET_NAME=crop-rx-local-web
@@ -28,7 +31,6 @@ services:
       - AWS_VIRTUAL_HOSTING=FALSE
       - WEB_HOST=backend
       - FRONTEND_URL=http://localhost:8080/
-      - CELERY_TASK_ALWAYS_EAGER=False
       - ELASTICSEARCH_CONN=http://es01:9200
       - DB_AUTH_KEY=f1b4fd36382857784f87ec4cfea17f18572333cd
      
