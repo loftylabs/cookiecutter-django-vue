@@ -75,7 +75,7 @@ def delete_celery():
 
 def delete_intercom():
     """ Deletes unused API files """
-    if cookiecutter.analytics != "Intercom":
+    if '{{cookiecutter.analytics}}' != "Intercom":
         files = [
             'frontend/components/Intercom.vue'
         ]
