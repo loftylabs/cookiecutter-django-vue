@@ -94,10 +94,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @list_route(methods=['POST'])
     def password_change(self, request, format=None):
-        if User.objects.filter(token=request.data['token']).exists():
-            user = User.objects.get(token=request.data['token'])
+        if User.objects.filter(email=request.data['email']).exists():
+            user = User.objects.get(email=request.data['email'])
             user.set_password(request.data['password'])
-            user.token = uuid4()
             user.save()
             return Response(status=status.HTTP_200_OK)
         else:

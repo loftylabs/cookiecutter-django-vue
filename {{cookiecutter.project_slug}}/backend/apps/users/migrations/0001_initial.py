@@ -24,8 +24,6 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=255, unique=True, verbose_name='Email')),
                 ('first_name', models.CharField(default='first', max_length=30, verbose_name='First name')),
                 ('last_name', models.CharField(default='last', max_length=30, verbose_name='Last name')),
-                ('avatar', models.ImageField(blank=True, upload_to='', verbose_name='Avatar')),
-                ('token', models.UUIDField(default=uuid.uuid4, editable=False, verbose_name='Token')),
                 ('is_admin', models.BooleanField(default=False, verbose_name='Admin')),
                 ('is_active', models.BooleanField(default=True, verbose_name='Active')),
                 ('is_staff', models.BooleanField(default=False, verbose_name='Staff')),

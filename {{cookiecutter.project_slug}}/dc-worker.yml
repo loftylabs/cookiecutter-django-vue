@@ -72,6 +72,56 @@ services:
       - 6379:6379
 {% endif %}
 
+{% if cookiecutter.use_celery == 'y' %}
+  beat:
+    build:
+      context:  ./backend
+    volumes:
+        - ./backend:/app
+    command: celery -A {{cookiecutter.project_slug}} beat
+    env_file: .env
+
+  worker:
+    build: 
+      context: ./backend
+    volumes:
+      - ./backend:/app
+    depends_on:
+        - rabbitmq
+        - redis
+    command: celery -A {{cookiecutter.project_slug}} worker --loglevel=info
+    env_file: .env
+
+
+  mq:
+    image: rabbitmq:latest
+    hostname: rabbit
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=secret
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  flower:
+    image: mher/flower
+    environment:
+      - CELERY_BROKER_URL=amqp://user:secret@mq:5672//
+      - FLOWER_PORT=5555
+    ports:
+      - 5555:5555
+
+{% endif %}
+
+{% if cookiecutter.use_selenium %}
+selenium:
+  image: selenium/standalone-chrome-debug:3.7.1
+  ports:
+    - 4444:4444
+    - 5900:5900
+
+{% endif %}
+
 volumes:
   {% if  cookiecutter.use_elastic_search == 'y' %}
   data01:
