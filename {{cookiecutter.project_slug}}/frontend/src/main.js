@@ -4,8 +4,8 @@ import router from '@/router'
 
 {% if cookiecutter.api == "REST" %}
 import axios from 'axios'
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL
+
 {% elif cookiecutter.api == "GraphQL" %}
 import { createProvider } from '@/apollo'
 {% endif %}
