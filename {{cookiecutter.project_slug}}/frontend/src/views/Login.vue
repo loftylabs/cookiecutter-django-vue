@@ -1,11 +1,17 @@
 <template>
+<div class="container">
+  <div class="row my-5 py-3">
+    <div class="col-lg-8 offset-2">
 <form class="form-signin">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" v-model="email" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
+      <div class="form-group">
+            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" v-model="email" required autofocus>
+      </div>
+
+      <div class="form-group">
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" v-model="password" required>
-        <div class="checkbox mb-3">
+      </div> 
+       <div class="checkbox mb-3">
             <label>
             <input type="checkbox" value="remember-me"> Remember me
             </label>
@@ -13,7 +19,9 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit" @click="doLogin">Sign in</button>
         <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
 </form>
-
+</div>
+</div>
+</div>
 </template>
 
 <script>

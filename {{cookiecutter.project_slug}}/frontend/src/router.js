@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 import ExampleComponent from '@/components/ExampleComponent.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
+import store from '@/store/index.js'
+
 
 const routes = [
   {path: '*', component: ExampleComponent},
