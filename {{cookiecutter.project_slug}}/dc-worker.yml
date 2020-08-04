@@ -90,27 +90,10 @@ services:
         - rabbitmq
         - redis
     command: celery -A {{cookiecutter.project_slug}} worker --loglevel=info
-    environment:
-      - DB_NAME=postgres
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_HOST=db
-      - DB_AUTH_KEY=
-      - RABBITMQ_HOST=mq
-      - RABBITMQ_USER=user
-      - RABBITMQ_PASSWORD=secret
-      - AWS_ACCESS_KEY_ID=
-      - AWS_SECRET_ACCESS_KEY=
-      - AWS_STORAGE_BUCKET_NAME=
-      - AWS_HTTPS=NO
-      - AWS_VIRTUAL_HOSTING=FALSE
-      - WEB_HOST=backend
-      - DEPLOYMENT_ENVIRONMENT=local
-      - LOCAL_HOST=TRUE
-      - ELASTICSEARCH_CONN=http://es01:9200
+    env_file: .env
 
 
-  mq:
+  rabbitmq:
     image: rabbitmq:latest
     hostname: rabbit
     environment:
@@ -123,21 +106,21 @@ services:
   flower:
     image: mher/flower
     environment:
-      - CELERY_BROKER_URL=amqp://user:secret@mq:5672//
+      - CELERY_BROKER_URL=amqp://user:secret@rabbitmq:5672//
       - FLOWER_PORT=5555
     ports:
       - 5555:5555
 
 {% endif %}
 
-{% if cookiecutter.use_selenium == 'y' %}
-selenium:
-  image: selenium/standalone-chrome-debug:3.7.1
-  ports:
-    - 4444:4444
-    - 5900:5900
+  {% if cookiecutter.use_selenium == 'y' %}
+  selenium:
+    image: selenium/standalone-chrome-debug:3.7.1
+    ports:
+      - 4444:4444
+      - 5900:5900
 
-{% endif %}
+  {% endif %}
 
 volumes:
   {% if  cookiecutter.use_elastic_search == 'y' %}
