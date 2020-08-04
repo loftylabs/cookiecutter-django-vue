@@ -2,7 +2,7 @@
 <div class="container">
   <div class="row my-5 py-3">
     <div class="col-lg-8 offset-2">
-<form class="form-signin">
+<div class="form-signin">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
         <div class="form-group">
@@ -32,9 +32,9 @@
             <input type="checkbox" value="remember-me"> Remember me
             </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" @click="doRegister">Sign in</button>
+        <span class="btn btn-lg btn-primary btn-block"  @click="doRegister">Sign in</span>
         <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
-</form>
+</div>
 </div>
 </div>
 </div>
