@@ -37,15 +37,23 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     {% if cookiecutter.api == 'REST' %}
     'rest_framework',
+    'corsheaders',
+
     {% elif cookiecutter.api == 'GraphQL' %}
     'graphene_django',
     {% endif %}
     'django_extensions',
+
 ]
 
 LOCAL_APPS = [
     'apps.users',
 ]
+
+{% if cookiecutter.api == 'REST' %}
+
+CORS_ORIGIN_ALLOW_ALL = True 
+{% endif %}
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -55,6 +63,10 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    {% if cookiecutter.api == 'REST' %}
+
+    'corsheaders.middleware.CorsMiddleware',
+    {% endif %}
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
