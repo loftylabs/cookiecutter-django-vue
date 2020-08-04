@@ -15,7 +15,7 @@ services:
       
   
   postgres:
-    image: postgres:10-alpine
+    image: postgres:latest
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file: .env
