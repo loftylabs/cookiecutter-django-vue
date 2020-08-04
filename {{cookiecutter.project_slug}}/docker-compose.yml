@@ -13,38 +13,14 @@ services:
     restart: on-failure
     env_file: .env
     environment: 
-      - DB_NAME=postgres
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_HOST=db
-      {% if cookiecutter.use_celery %}
-      - RABBITMQ_HOST=mq
-      - RABBITMQ_USER=user
-      - RABBITMQ_PASSWORD=secret
-      - CELERY_TASK_ALWAYS_EAGER=False
-      {% endif %}
-      - AWS_ACCESS_KEY_ID=
-      - AWS_SECRET_ACCESS_KEY=
-      - AWS_STORAGE_BUCKET_NAME=
-      - DEPLOYMENT_ENVIRONMENT=local
-      - LOCAL_HOST=TRUE
-      - AWS_HTTPS=NO
-      - AWS_VIRTUAL_HOSTING=FALSE
-      - WEB_HOST=backend
-      - FRONTEND_URL=http://localhost:8080/
-      - ELASTICSEARCH_CONN=http://es01:9200
-      - DB_AUTH_KEY=
-     
+      
   
   postgres:
     image: postgres:10-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file: .env
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+ 
 
 volumes:
   postgres_data: {}
