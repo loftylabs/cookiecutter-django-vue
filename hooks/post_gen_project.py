@@ -62,6 +62,9 @@ def delete_worker_docker_compose():
         for filename in files:
             os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
+def run_npm_install():
+    subprocess.check_call('cd frontend & npm install', shell=True)
+
 def delete_celery():
     """ Deletes unused API files """
     if '{{ cookiecutter.use_celery }}' != 'y':
@@ -97,3 +100,4 @@ delete_worker_docker_compose()
 delete_circleci()
 delete_celery()
 delete_intercom()
+run_npm_install()
