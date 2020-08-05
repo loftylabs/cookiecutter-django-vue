@@ -1,0 +1,260 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/code
+    docker:
+      - image: circleci/python:3.7.4
+    steps:
+      - checkout
+      - run:
+          name: Install Python deps in a venv
+          command: |
+            sudo apt-get update
+            python -m venv venv
+            . venv/bin/activate
+            pip install -r backend/requirements.txt
+      - save_cache:
+              key: v1-{{ checksum "backend/requirements.txt" }}
+              paths:
+                - 'venv'
+      - persist_to_workspace:
+              root: .
+              paths:
+                - .
+  test:
+    docker:
+      - image: circleci/python:3.7.4
+      - image: circleci/postgres:9.6.2-alpine
+        name: postgres
+        environment:
+          - POSTGRES_USER: postgres
+          - POSTGRES_PASSWORD: postgres
+          - POSTGRES_DB: postgres
+    working_directory: ~/code
+    steps:
+      - attach_workspace:
+          at: ~/code
+      - restore_cache:
+          key: v1-{{ checksum "backend/requirements.txt" }}
+      - run:
+          name: Run Unit Tests
+          command: |
+            sudo apt-get update
+            python -m venv venv
+            . venv/bin/activate
+            pip install -r backend/requirements.txt
+            cd backend
+            python manage.py test
+          environment:
+            - POSTGRES_USER: postgres
+            - POSTGRES_PASSWORD: postgres
+            - POSTGRES_DB: postgres
+            - DEBUG: "True"
+            - SECRET_KEY: [SECRET_KEY]
+            - DOMAIN: http://localhost:8000
+            - ALLOWED_HOSTS: '*'
+            - CORS_ORIGIN_ALLOW_ALL: "True"
+
+  build_image:
+    docker:
+      - image: circleci/python:3.7.4
+    working_directory: ~/code
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - attach_workspace:
+          at: ~/code
+      - restore_cache:
+          key: v1-{{ checksum "requirements.txt" }}
+      - run:
+          name: Build Image and push to ECR
+          command: |
+            . venv/bin/activate
+            pip install awscli
+            aws configure set aws_access_key_id  $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set default.region us-east-2
+            aws configure set default.output json
+            $(aws ecr get-login --no-include-email --region us-east-2)
+            cd backend
+            docker build -t [TAG_NAME] -f Dockerfile .
+            docker tag [tag_name]:latest [ecr_location]/[name]:$CIRCLE_SHA1
+            docker push [ecr_location]/[name]]:$CIRCLE_SHA1
+  deploy-staging:
+    docker:
+      - image: rancher/cli:v2.0.4
+    working_directory: ~/code
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/code
+      - restore_cache:
+          key: v1-{{ checksum "backend/requirements.txt" }}
+      - run:
+          name: Install Kubectl
+          command: |
+            apk update
+            apk add curl
+            apk add jq
+            curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            mv ./kubectl /usr/local/bin/kubectl
+          environment:
+            - AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID   
+            - AWS_SECRET_ACCESS_KEY:  $AWS_SECRET_ACCESS_KEY  
+            - AWS_DEFAULT_REGION: us-east-2 
+      - run:
+          name: Deploy to Kubernetes
+          command: |
+          rancher login [RANCHER LOGIN] --token $RANCHER_BEARER_TOKEN_PROD --context [context]
+          rancher kubectl set image deployment/[POD_NAME] [POD_NAME]=[ECR_LOCATION]/[NAME]:$CIRCLE_SHA1 --namespace [RANCHER_NAMESPACE]  --insecure-skip-tls-verify
+          rancher kubectl set image deployment/[POD_NAME] [POD_NAME]=[ECR_LOCATION]/[NAME]:$CIRCLE_SHA1 --namespace [RANCHER_NAMESPACE] --insecure-skip-tls-verify
+          rancher kubectl set image deployment/[POD_NAME] [POD_NAME]=[ECR_LOCATION]/[NAME]:$CIRCLE_SHA1 --namespace [RANCHER_NAMESPACE]  --insecure-skip-tls-verify
+          rancher kubectl exec -it `rancher kubectl get pods -o json --insecure-skip-tls-verify --namespace=[RANCHER_NAMESPACE] | jq '[ .items[] | select(.spec.containers[0].name == "[POD_NAME]")] | .[0] | .metadata.name' | tr -d '"'` --insecure-skip-tls-verify --namespace=[RANCHER_NAMESPACE] -- python manage.py migrate
+          rancher kubectl exec -it `rancher kubectl get pods -o json --insecure-skip-tls-verify --namespace=[RANCHER_NAMESPACE] | jq '[ .items[] | select(.spec.containers[0].name == "[POD_NAME]")] | .[0] | .metadata.name' | tr -d '"'` --insecure-skip-tls-verify --namespace=[RANCHER_NAMESPACE]-- python manage.py collectstatic --no-input --verbosity 0 
+  deploy-prod:
+      docker:
+        - image: rancher/cli:v2.0.4
+      working_directory: ~/code
+      steps:
+        - checkout
+        - attach_workspace:
+            at: ~/code
+        - restore_cache:
+            key: v1-{{ checksum "backend/requirements.txt" }}
+        - run:
+            name: Install Kubectl
+            command: |
+              apk update
+              apk add curl
+              apk add jq
+              curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+              chmod +x ./kubectl
+              mv ./kubectl /usr/local/bin/kubectl
+            environment:
+              - AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID   
+              - AWS_SECRET_ACCESS_KEY:  $AWS_SECRET_ACCESS_KEY  
+              - AWS_DEFAULT_REGION: us-east-2 
+        - run:
+            name: Deploy to Kubernetes
+            command: |
+              rancher login [RANCHER LOGIN] --token $RANCHER_BEARER_TOKEN_PROD --context [context]
+              rancher kubectl set image deployment/[POD_NAME] [POD_NAME]=[ECR_LOCATION]/[NAME]:$CIRCLE_SHA1 --namespace [RANCHER_NAMESPACE]  --insecure-skip-tls-verify
+              rancher kubectl set image deployment/[POD_NAME] [POD_NAME]=[ECR_LOCATION]/[NAME]:$CIRCLE_SHA1 --namespace [RANCHER_NAMESPACE] --insecure-skip-tls-verify
+              rancher kubectl set image deployment/[POD_NAME] [POD_NAME]=[ECR_LOCATION]/[NAME]:$CIRCLE_SHA1 --namespace [RANCHER_NAMESPACE]  --insecure-skip-tls-verify
+              rancher kubectl exec -it `rancher kubectl get pods -o json --insecure-skip-tls-verify --namespace=[RANCHER_NAMESPACE] | jq '[ .items[] | select(.spec.containers[0].name == "[POD_NAME]")] | .[0] | .metadata.name' | tr -d '"'` --insecure-skip-tls-verify --namespace=[RANCHER_NAMESPACE] -- python manage.py migrate
+              rancher kubectl exec -it `rancher kubectl get pods -o json --insecure-skip-tls-verify --namespace=[RANCHER_NAMESPACE] | jq '[ .items[] | select(.spec.containers[0].name == "[POD_NAME]")] | .[0] | .metadata.name' | tr -d '"'` --insecure-skip-tls-verify --namespace=[RANCHER_NAMESPACE]-- python manage.py collectstatic --no-input --verbosity 0 
+  
+
+  deploy-frontend-staging:
+    docker:
+      - image: circleci/python:3.7.4-node
+    working_directory: ~/code
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/code
+      - restore_cache:
+          key: v1-{{ checksum "backend/requirements.txt" }}
+      - run:
+          name: install awscli
+          command: |
+            sudo pip install --upgrade pip
+            sudo pip install awscli
+      - run:
+          name: build project
+          command: |
+            cd frontend
+            npm install
+            npm test:unit
+            npx vue-cli-service build --mode staging
+      - run:
+          name: deploy
+          command: |
+            cd frontend
+            aws configure set aws_access_key_id  $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set default.region us-east-2
+            aws s3 cp dist/ s3://[S3_BUCKET]--recursive --acl=public-read --region us-east-2
+  deploy-frontend-prod:
+    docker:
+      - image: circleci/python:3.7.4-node
+    working_directory: ~/code
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/code
+      - restore_cache:
+          key: v1-{{ checksum "backend/requirements.txt" }}
+      - run:
+          name: install awscli
+          command: |
+            sudo pip install --upgrade pip
+            sudo pip install awscli
+      - run:
+          name: build project
+          command: |
+            cd frontend
+            npm install
+            npm test:unit
+            npx vue-cli-service build --mode production
+      - run:
+          name: deploy
+          command: |
+            cd frontend
+            aws configure set aws_access_key_id  $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set default.region us-east-2
+            aws s3 cp dist/ s3://[S3_BUCKET]--recursive --acl=public-read --region us-east-2
+     
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - build
+      - test:
+          requires:
+             - build
+      - build_image:
+          requires:
+            - build
+            - test
+          filters:
+            branches:
+              only: 
+                - development
+                - master
+      - deploy-staging:
+          requires:
+            - build
+            - test
+            - build_image
+          filters:
+            branches:
+              only: development
+      - deploy-prod:
+          requires:
+            - build
+            - test
+            - build_image
+          filters:
+            branches:
+              only: master
+      - deploy-frontend-staging:
+          requires:
+            - build
+            - test
+            - build_image
+            - deploy-staging
+          filters:
+            branches:
+              only: development
+      - deploy-frontend-prod:
+          requires:
+            - build
+            - test
+            - build_image
+            - deploy-prod
+          filters:
+            branches:
+              only: master
