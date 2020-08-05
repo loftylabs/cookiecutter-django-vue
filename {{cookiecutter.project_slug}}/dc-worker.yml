@@ -93,7 +93,7 @@ services:
     env_file: .env
 
 
-  mq:
+  rabbitmq:
     image: rabbitmq:latest
     hostname: rabbit
     environment:
@@ -106,21 +106,21 @@ services:
   flower:
     image: mher/flower
     environment:
-      - CELERY_BROKER_URL=amqp://user:secret@mq:5672//
+      - CELERY_BROKER_URL=amqp://user:secret@rabbitmq:5672//
       - FLOWER_PORT=5555
     ports:
       - 5555:5555
 
 {% endif %}
 
-{% if cookiecutter.use_selenium %}
-selenium:
-  image: selenium/standalone-chrome-debug:3.7.1
-  ports:
-    - 4444:4444
-    - 5900:5900
+  {% if cookiecutter.use_selenium == 'y' %}
+  selenium:
+    image: selenium/standalone-chrome-debug:3.7.1
+    ports:
+      - 4444:4444
+      - 5900:5900
 
-{% endif %}
+  {% endif %}
 
 volumes:
   {% if  cookiecutter.use_elastic_search == 'y' %}

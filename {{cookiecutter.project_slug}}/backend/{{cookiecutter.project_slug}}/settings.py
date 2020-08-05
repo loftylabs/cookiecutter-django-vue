@@ -37,15 +37,23 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     {% if cookiecutter.api == 'REST' %}
     'rest_framework',
+    'corsheaders',
+
     {% elif cookiecutter.api == 'GraphQL' %}
     'graphene_django',
     {% endif %}
     'django_extensions',
+
 ]
 
 LOCAL_APPS = [
     'apps.users',
 ]
+
+{% if cookiecutter.api == 'REST' %}
+
+CORS_ORIGIN_ALLOW_ALL = True 
+{% endif %}
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -55,6 +63,10 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    {% if cookiecutter.api == 'REST' %}
+
+    'corsheaders.middleware.CorsMiddleware',
+    {% endif %}
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -129,7 +141,7 @@ STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/staticfiles/'
-DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'
+DEFAULT_FILE_STORAGE = '{{cookiecutter.project_slug}}.storage_backends.MediaStorage'
 
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
@@ -160,7 +172,7 @@ if LOCAL_HOST:
     
 
 else:
-    STATICFILES_STORAGE = 'config.storage_backends.StaticStorage'
+    STATICFILES_STORAGE = '{{cookiecutter.project_slug}}.storage_backends.StaticStorage'
     AWS_S3_USE_SSL = True
     AWS_S3_SIGNATURE_VERSION = 's3v4'
     {% if cookiecutter.use_sentry %}

@@ -6,7 +6,7 @@ from django.conf.urls import include
 
 # from config.api import api
 import importlib
-my_module = importlib.import_module(f"{cookiecutter.project_slug}.api")
+my_module = importlib.import_module("{{cookiecutter.project_slug}}.api")
 api = getattr(my_module, "api")
 
 
