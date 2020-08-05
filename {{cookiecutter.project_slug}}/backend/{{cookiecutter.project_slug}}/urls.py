@@ -4,7 +4,13 @@ from django.contrib.auth import logout
 {% if cookiecutter.api == 'REST' %}
 from django.conf.urls import include
 
-from config.api import api
+# from config.api import api
+import importlib
+my_module = importlib.import_module("{{cookiecutter.project_slug}}.api")
+api = getattr(my_module, "api")
+
+
+
 {% elif cookiecutter.api == 'GraphQL' %}
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt

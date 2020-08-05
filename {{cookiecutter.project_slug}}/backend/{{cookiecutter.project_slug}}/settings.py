@@ -9,6 +9,14 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 import environ
 from datetime import timedelta
+import os
+
+{% if cookiecutter.use_sentry %}
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.celery import CeleryIntegration
+{% endif %}
+
 
 ROOT_DIR = environ.Path(__file__) - 2
 
@@ -29,15 +37,23 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     {% if cookiecutter.api == 'REST' %}
     'rest_framework',
+    'corsheaders',
+
     {% elif cookiecutter.api == 'GraphQL' %}
     'graphene_django',
     {% endif %}
     'django_extensions',
+
 ]
 
 LOCAL_APPS = [
     'apps.users',
 ]
+
+{% if cookiecutter.api == 'REST' %}
+
+CORS_ORIGIN_ALLOW_ALL = True 
+{% endif %}
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -47,6 +63,10 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    {% if cookiecutter.api == 'REST' %}
+
+    'corsheaders.middleware.CorsMiddleware',
+    {% endif %}
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -121,11 +141,13 @@ STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/staticfiles/'
+DEFAULT_FILE_STORAGE = '{{cookiecutter.project_slug}}.storage_backends.MediaStorage'
+
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = [
     str(ROOT_DIR('static')),
-    str(ROOT_DIR('config/templates')),
+    str(ROOT_DIR('{{cookiecutter.project_slug}}/templates')),
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
@@ -133,6 +155,39 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
+
+
+AWS_S3_REGION_NAME = 'us-east-2'
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_QUERYSTRING_EXPIRE = 28800
+AWS_AUTO_CREATE_BUCKET = True
+LOCAL_HOST = bool(os.environ.get('LOCAL_HOST', False))
+
+
+if LOCAL_HOST:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    
+
+else:
+    STATICFILES_STORAGE = '{{cookiecutter.project_slug}}.storage_backends.StaticStorage'
+    AWS_S3_USE_SSL = True
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
+    {% if cookiecutter.use_sentry %}
+    sentry_sdk.init(
+        dsn="https://2c8d4a2931d4433e9c62a702f462c55a@sentry.io/1813585",
+        integrations=[DjangoIntegration(), CeleryIntegration()]
+    )
+    {% endif %}
+
+    # Email Settings
+    EMAIL_BACKEND = 'django_ses.SESBackend'
+    AWS_SES_REGION_NAME = 'us-east-1'
+    AWS_SES_REGION_ENDPOINT = 'email.us-east-1.amazonaws.com'
+
+
 
 # MEDIA CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -144,10 +199,10 @@ MEDIA_URL = '/media/'
 
 # URL Configuration
 # ------------------------------------------------------------------------------
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = '{{cookiecutter.project_slug}}.urls'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = '{{cookiecutter.project_slug}}.wsgi.application'
 
 # TEMPLATE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -230,7 +285,7 @@ REST_FRAMEWORK = {
 {% elif cookiecutter.api == 'GraphQL' %}
 # Graphene
 GRAPHENE = {
-    'SCHEMA': 'config.schema.schema',
+    'SCHEMA': '{{cookiecutter.project_slug}}.schema.schema',
 }
 
 if DEBUG:
@@ -323,5 +378,25 @@ CACHES = {
 }
 
 
+
+{% endif %}
+
+{% if cookiecutter.use_celery == 'y' %}
+
+RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST')
+RABBITMQ_USER = os.environ.get('RABBITMQ_USER')
+RABBITMQ_PASSWORD = os.environ.get('RABBITMQ_PASSWORD')
+
+
+CELERY_ACCEPT_CONTENT = ['json']  # Ignore other content
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ENABLE_UTC = True
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_BROKER_URL = f'amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_HOST}:5672//'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:6379/0'
+CELERY_TASK_ALWAYS_EAGER = os.environ.get('CELERY_TASK_ALWAYS_EAGER', 'False') == 'True'
+CELERY_BEAT_SCHEDULE = {
+   
+}
 
 {% endif %}

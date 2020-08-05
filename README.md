@@ -17,7 +17,6 @@ Features
 
 -   [Docker](https://www.docker.com/)
 -   [12 Factor](http://12factor.net/)
--   Server: [Nginx](https://nginx.org/)
 -   Frontend: [Vue](https://vuejs.org/) + [vue-cli](https://cli.vuejs.org/) + [PWA](https://developers.google.com/web/progressive-web-apps/)
 -   Backend: [Django](https://www.djangoproject.com/)
 -   Database: [PostgreSQL](https://www.postgresql.org/)
@@ -30,8 +29,7 @@ Optional Integrations
 
 -   Integration with [MailHog](https://github.com/mailhog/MailHog) for local email testing
 -   Integration with [Sentry](https://sentry.io/welcome/) for frontend and backend errors logging
--   Integration with [Portainer](https://portainer.io/) (management UI for docker)
--   Integration with [Google Analytics](https://www.google.com/analytics/) or [Yandex Metrika](https://tech.yandex.ru/metrika/) for web-analytics
+-   Integration with [Google Analytics](https://www.google.com/analytics/) for web-analytics
 -   Automatic database backups
 
 Usage
@@ -43,7 +41,7 @@ First, get `cookiecutter`:
 
 Now run it against this repo:
 
-    $ cookiecutter gh:vchaptsev/cookiecutter-django-vue
+    $ cookiecutter gh:loftylabs/cookiecutter-django-vue
 
 You'll be prompted for some values. Provide them, then a  project
 will be created for you.
@@ -64,11 +62,10 @@ Answer the prompts with your own desired options. For example:
     backups [y]: y
     ==================== INTEGRATIONS =================== [ ]:
     use_sentry [y]: y
-    use_portainer [y]: y
     use_mailhog [y]: y
     Select analytics:
     1 - Google Analytics
-    2 - Yandex Metrika
+    2 - Intercom
     3 - None
     Choose from 1, 2, 3 [1]: 2
 

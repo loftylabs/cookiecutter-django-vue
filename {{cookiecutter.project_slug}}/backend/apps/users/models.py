@@ -34,9 +34,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='Email', unique=True, max_length=255)
     first_name = models.CharField(verbose_name='First name', max_length=30, default='first')
     last_name = models.CharField(verbose_name='Last name', max_length=30, default='last')
-    avatar = models.ImageField(verbose_name='Avatar', blank=True)
-    token = models.UUIDField(verbose_name='Token', default=uuid4, editable=False)
-
     is_admin = models.BooleanField(verbose_name='Admin', default=False)
     is_active = models.BooleanField(verbose_name='Active', default=True)
     is_staff = models.BooleanField(verbose_name='Staff', default=False)

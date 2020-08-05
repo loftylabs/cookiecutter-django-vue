@@ -36,14 +36,14 @@ def delete_api_files():
     if '{{ cookiecutter.api }}' == 'REST':
         files = [
             '.graphqlrc',
-            'backend/config/schema.py',
+            'backend/{{cookiecutter.project_slug}}/schema.py',
             'backend/apps/users/schema.py',
             'frontend/src/apollo.js',
         ]
         shutil.rmtree(os.path.join(PROJECT_DIRECTORY, 'frontend/src/graphql'))
     else:
         files = [
-            'backend/config/api.py',
+            'backend/{{cookiecutter.project_slug}}/api.py',
             'backend/apps/users/views.py',
             'backend/apps/users/serializers.py',
         ]
@@ -54,7 +54,7 @@ def delete_api_files():
 
 def delete_worker_docker_compose():
     """ Deletes unused API files """
-    if '{{ cookiecutter.use_redis }}' != 'y' and '{{ cookiecutter.use_mailhog }}' != 'y' and '{{ cookiecutter.use_elastic_search }}' != 'y':
+    if '{{ cookiecutter.use_redis }}' != 'y' and '{{ cookiecutter.use_mailhog }}' != 'y' and '{{ cookiecutter.use_elastic_search }}' != 'y' and '{{ cookiecutter.use_celery }}' != 'y':
         files = [
             'dc-worker.yml'
         ]
@@ -62,6 +62,15 @@ def delete_worker_docker_compose():
         for filename in files:
             os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
+def delete_celery():
+    """ Deletes unused API files """
+    if '{{ cookiecutter.use_celery }}' != 'y':
+        files = [
+            'backend/{{cookiecutter.project_slug}}/celery.py'
+        ]
+    
+        for filename in files:
+            os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
 def delete_circleci():
     """ Deletes unused API files """
@@ -70,6 +79,15 @@ def delete_circleci():
         for filename in files:
             os.rmdir(os.path.join(PROJECT_DIRECTORY, '.circleci'))
 
+def delete_intercom():
+    """ Deletes unused API files """
+    if '{{cookiecutter.analytics}}' != "Intercom":
+        files = [
+            'frontend/src/components/Intercom.vue'
+        ]
+    
+        for filename in files:
+            os.remove(os.path.join(PROJECT_DIRECTORY, filename))
 
 
 set_secret_key()
@@ -77,3 +95,5 @@ rename_env_file()
 delete_api_files()
 delete_worker_docker_compose()
 delete_circleci()
+delete_celery()
+delete_intercom()

@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "npm i && vue-cli-service serve",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:staging": "vue-cli-service build --mode staging",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:e2e": "vue-cli-service test:e2e",
+    "test:unit": "vue-cli-service test:unit",
+    "deploy": "vue-cli-service build && deploy_staging.sh",
+    "deploy:staging": "vue-cli-service build --mode staging && deploy_staging.sh",
+    "deploy:production": "vue-cli-service build --mode production && deploy_production.sh"
   },
   "dependencies": {
     "axios": "^0.18.0",
