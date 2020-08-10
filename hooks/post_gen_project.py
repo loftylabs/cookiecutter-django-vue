@@ -7,6 +7,7 @@ import os
 import random
 import string
 import shutil
+import subprocess
 
 # Get the root project directory
 PROJECT_DIRECTORY = os.path.realpath(os.path.curdir)
