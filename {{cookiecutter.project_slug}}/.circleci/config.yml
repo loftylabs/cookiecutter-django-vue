@@ -1,5 +1,6 @@
 version: 2
-
+orbs:
+  anchore: anchore/anchore-engine@1.8.0
 jobs:
   build:
     working_directory: ~/code
