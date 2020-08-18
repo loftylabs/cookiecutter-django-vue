@@ -1,4 +1,6 @@
 version: 2
+orbs:
+  anchore: anchore/anchore-engine@1.8.0
 jobs:
   build:
     working_directory: ~/code
@@ -211,6 +213,22 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
+      - anchore/image_scan:
+          image_name: circleci/python:3.7.4
+          timeout: '300'
+          policy_failure: True
+      - anchore/image_scan:
+          image_name: circleci/postgres:9.6.2-alpine
+          timeout: '300'
+          policy_failure: True
+      - anchore/image_scan:
+          image_name: rancher/cli:v2.0.4
+          timeout: '300'
+          policy_failure: True
+      - anchore/image_scan:
+          image_name: circleci/python:3.7.4-node
+          timeout: '300'
+          policy_failure: True
       - build
       - test:
           requires:
