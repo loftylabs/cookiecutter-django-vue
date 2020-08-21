@@ -16,3 +16,5 @@ RUN pip install -r ./requirements.txt
 COPY ./scripts/entrypoint.sh ./scripts/start.sh ./scripts/gunicorn.sh /
 
 WORKDIR /app
+
+COPY . .
