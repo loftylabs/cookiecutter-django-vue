@@ -44,6 +44,11 @@ THIRD_PARTY_APPS = [
     {% endif %}
     'django_extensions',
 
+    {% if cookiecutter.use_social_auth == 'y' %}
+      'social_django',  
+    'rest_social_auth', 
+    {% endif %}
+
 ]
 
 LOCAL_APPS = [

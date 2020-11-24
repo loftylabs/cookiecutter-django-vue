@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    {% if cookiecutter.use_social_auth == 'y' %}"vue-authenticate":  "^1.4.1",{% endif %}
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.17",
     {% if cookiecutter.api == "GraphQL" %}"vue-apollo": "^3.0.0-beta.20",{% endif %}

@@ -18,6 +18,7 @@
     "use_sentry": "y",
     "use_mailhog": "y",
     "analytics": ["Google Analytics", "Intercom", "None"],
+    "use_social_auth":"y",
     "use_elastic_search": "y",
     "use_redis": "y",
     "use_celery": "y",

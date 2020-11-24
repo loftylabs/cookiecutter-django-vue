@@ -40,3 +40,27 @@ new Vue({
   {% if cookiecutter.api == "GraphQL" %}provide: createProvider().provide(),{% endif %}
   render: h => h(App)
 }).$mount('#app')
+
+{% if cookiecutter.use_social_auth == 'y' %}
+import VueAuthenticate from 'vue-authenticate'
+
+const oauthRedirectUri = ''
+
+Vue.use(VueAuthenticate, {
+    baseURL: process.env.VUE_APP_API_BASE_URL,
+    storageType: 'cookieStorage',
+    registerUrl: '',
+    loginUrl: '',
+    cookieStorage: {
+      domain: window.location.hostname,
+      path: '/',
+      secure: false
+    },
+    tokenPath: 'token',
+    bindRequestInterceptor: function () {},
+      bindResponseInterceptor: function () {}
+,
+providers: {}
+}
+)
+{% endif %}
